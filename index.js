@@ -7,7 +7,14 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-app.get("/", (req, res) => {
+const allowCORS = function(req, res, next) {
+  var origin = req.get('origin');
+  res.header("Access-Control-Allow-Origin", origin);
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+};
+
+app.get("/", allowCORS, (req, res) => {
   res.sendFile(join(__dirname, "index.html"));
 });
 
