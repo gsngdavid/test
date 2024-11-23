@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Socket.IO</title>
+</head>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+</script>
+
+<body>
+    <h1>Geolocation</h1>
+    <div id="details"></div>
+</body>
+<script>
+    const details = document.getElementById("details")
+    let count = 0
+    const socket = io();
+    const options = {
+        enableHighAccuracy: false,
+        timeout: 5000,
+        maximumAge: 0,
+    };
+
+    const id = navigator.geolocation.watchPosition(success, error, options);
+
+
+    function success({ coords }) {
+
+        const { accuracy,
+            altitude,
+            altitudeAccuracy,
+            heading,
+            latitude,
+            longitude,
+            speed } = coords
+
+        details.innerHTML = `Accuracy: ${accuracy} <br />`
+        details.innerHTML += `altitude: ${altitude} <br />`
+        details.innerHTML += `altitudeAccuracy: ${altitudeAccuracy} <br />`
+        details.innerHTML += `heading: ${heading} <br />`
+        details.innerHTML += `latitude: ${latitude} <br />`
+        details.innerHTML += `longitude: ${longitude} <br />`
+        details.innerHTML += `speed: ${speed} <br />`
+
+
+
+        // map.textContent = `Longitude: ${coords.longitude}`
+        socket.emit("coords", coords)
+    }
+
+    function error(err) {
+        console.error(`ERROR(${err.code}): ${err.message}`);
+    }
+</script>
+
+</html>
