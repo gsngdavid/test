@@ -7,15 +7,12 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-const allowCORS = function(req, res, next) {
-  var origin = req.get('origin');
-  res.header("Access-Control-Allow-Origin", origin);
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-};
-
-app.get("/", allowCORS, (req, res) => {
+app.get("/", (req, res) => {
   res.sendFile(join(__dirname, "index.html"));
+});
+
+app.get("/map", (req, res) => {
+  res.sendFile(join(__dirname, "map.html"));
 });
 
 io.on("connection", (socket) => {
@@ -26,8 +23,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("coords", (coords) => {
-    console.log("===== Coordinates =====");
-    console.log(coords);
+    console.log(coords.latitude);
+
+    io.emit("getCoords", coords);
   });
 });
 

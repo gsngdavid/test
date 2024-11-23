@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Marker</title>
+    <!-- The callback parameter is required, so we use console.debug as a noop -->
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHgCxpFocoUbQHdeTKCTDZjSbG5vR_OWs&callback=console.debug&libraries=maps,marker&v=beta">
+        </script>
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        gmp-map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html,
+        body {
+            height: 90%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<body>
+    <gmp-map center="-1.9628032, 30.1662208" zoom="16" map-id="map" id="map">
+        <gmp-advanced-marker position="-1.9628032, 30.1662208" title="My location" id="marker"></gmp-advanced-marker>
+    </gmp-map>
+    <div id="details"></div>
+</body>
+<script>
+    const socket = io();
+    const map = document.getElementById("map")
+    const marker = document.getElementById("marker")
+
+    socket.on("getCoords", (coords) => {
+        const { accuracy,
+            altitude,
+            altitudeAccuracy,
+            heading,
+            latitude,
+            longitude,
+            speed } = coords
+
+        const position = `${latitude}, ${longitude}`
+
+        map.setAttribute("center", position)
+        marker.setAttribute("position", position)
+
+        details.innerHTML = `Accuracy: ${accuracy} <br />`
+        details.innerHTML += `altitude: ${altitude} <br />`
+        details.innerHTML += `altitudeAccuracy: ${altitudeAccuracy} <br />`
+        details.innerHTML += `heading: ${heading} <br />`
+        details.innerHTML += `latitude: ${latitude} <br />`
+        details.innerHTML += `longitude: ${longitude} <br />`
+        details.innerHTML += `speed: ${speed} <br />`
+
+    })
+    window.init
+</script>
+
+</html>
